@@ -1,7 +1,9 @@
 package xyz.zao123.algorithm;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Stack;
 
 // 如下二叉树，补充中序遍历方法，最后打印出结果： [B, A, D, C, E]
 //        A
@@ -22,10 +24,114 @@ public class TreeTraversal {
         TreeNode root = new TreeNode('A', nodeB, nodeC);
 
         System.out.println(preorderTraversal(root));
+        System.out.println(preorderTraversalWithStack(root));
         System.out.println(inorderTraversal(root));
+        System.out.println(inorderTraversalWithStack(root));
         System.out.println(afterorderTraversal(root));
+        System.out.println(afterorderTraversalWithStack(root));
 
     }
+
+    private static List<Character> afterorderTraversalWithStack(TreeNode root) {
+
+        List<Character> list = new ArrayList<>();
+
+        if(root==null){
+            return list;
+        }
+
+        Stack<TreeNode>  stack = new Stack<>();
+        afterOrderStack(stack,root);
+
+        while (!stack.isEmpty()){
+            list.add(stack.pop().getValue());
+        }
+
+        return list;
+    }
+
+    private static void afterOrderStack(Stack<TreeNode> stack, TreeNode root) {
+
+        if(root == null){
+            return;
+        }
+
+        stack.push(root);
+
+        if(root.getRight()!=null){
+            afterOrderStack(stack,root.getRight());
+        }
+
+        if(root.getLeft()!=null){
+            afterOrderStack(stack,root.getLeft());
+        }
+
+    }
+
+    private static List<Character> inorderTraversalWithStack(TreeNode root) {
+        List<Character> list = new ArrayList<>();
+
+        if(root==null){
+            return list;
+        }
+
+        Stack<TreeNode>  stack = new Stack<>();
+        inOrderStack(stack,root);
+
+        while (!stack.isEmpty()){
+            list.add(stack.pop().getValue());
+        }
+
+        return list;
+    }
+
+    private static void inOrderStack(Stack<TreeNode> stack, TreeNode root) {
+        if(root == null){
+            return;
+        }
+
+        if(root.getRight()!=null){
+            inOrderStack(stack,root.getRight());
+        }
+
+        stack.push(root);
+
+        if(root.getLeft()!=null){
+            inOrderStack(stack,root.getLeft());
+        }
+    }
+
+    private static List<Character> preorderTraversalWithStack(TreeNode root){
+
+        List<Character> list = new ArrayList<>();
+
+        if(root==null){
+            return list;
+        }
+
+        Stack<TreeNode>  stack = new Stack<>();
+        preOrderStack(stack,root);
+
+        while (!stack.isEmpty()){
+            list.add(stack.pop().getValue());
+        }
+
+        return list;
+    }
+
+    private static void preOrderStack(Stack<TreeNode> stack, TreeNode root) {
+        if(root == null){
+            return;
+        }
+        if(root.getRight()!=null){
+            preOrderStack(stack,root.getRight());
+        }
+        if(root.getLeft()!=null){
+            preOrderStack(stack,root.getLeft());
+        }
+        stack.push(root);
+    }
+
 
     private static List<Character> preorderTraversal(TreeNode root) {
         List<Character> list = new ArrayList<>();
