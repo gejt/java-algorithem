@@ -1,4 +1,4 @@
-package xyz.zao123.algorithm;
+package xyz.zao123;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
