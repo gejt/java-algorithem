@@ -1,7 +1,7 @@
 package xyz.zao123.thread.lock;
 
 /**
- * 对象锁  类锁  私有锁
+ * 对象锁  类锁  私有锁  (所有锁都是锁对象)
  *      * 对象锁锁具有可重入性。
  *      * 当一个线程获得了某个对象的对象锁，则该线程仍然可以调用其他任何需要该对象锁的 synchronized 方法或 synchronized(this) 同步代码块。
  *      * 当一个线程访问某个对象的一个 synchronized(this) 同步代码块时，其他线程对该对象中所有其它 synchronized(this) 同步代码块的访问将被阻塞，因为访问的是同一个对象锁。

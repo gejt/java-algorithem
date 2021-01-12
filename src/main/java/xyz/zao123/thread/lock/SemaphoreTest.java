@@ -1,10 +1,11 @@
 package xyz.zao123.thread.lock;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Semaphore 可以指定多个线程同时访问某个资源，而 synchronized 和 ReentrantLock 都是一次只允许一个线程访问某个资源。由于 Semaphore 适用于限制访问某些资源的线程数目，因此可以使用它来做限流。
@@ -18,22 +19,65 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SemaphoreTest {
 
     public static void main(String[] args) {
-        Semaphore semaphore = new Semaphore(3);
-        Lock lock = new ReentrantLock();
-        ExecutorService service = Executors.newCachedThreadPool();
+        Semaphore semaphore = new Semaphore(10);
+        long start = System.currentTimeMillis();
+        List<Thread> list = new ArrayList<>();
 
-        for(int i=0;i<100;i++){
-            service.execute(()->{
+        for(int i = 0;i<1000;i++){
+            list.add(new Thread(()->{
                 try {
                     semaphore.acquire();
-                    System.out.println(Thread.currentThread().getName()+" count="+semaphore.getQueueLength());
-                    semaphore.release();
+                    System.out.println("线程"+Thread.currentThread().getName()+"执行啊");
+                    TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    semaphore.release();
                 }
-            });
+
+            }));
         }
-        service.shutdown();
+
+        list.forEach(Thread::start);
+
+        System.out.println("cost time:"+(System.currentTimeMillis()-start)+"ms");
+    }
+
+    @Test
+    public void test(){
+        //Semaphore s = new Semaphore(2);
+        Semaphore s = new Semaphore(2, true);
+        //允许一个线程同时执行
+        //Semaphore s = new Semaphore(1);
+
+        new Thread(()->{
+            try {
+                s.acquire();
+
+                System.out.println("T1 running...");
+                Thread.sleep(200);
+                System.out.println("T1 running...");
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                s.release();
+            }
+        }).start();
+
+        new Thread(()->{
+            try {
+                s.acquire();
+
+                System.out.println("T2 running...");
+                Thread.sleep(200);
+                System.out.println("T2 running...");
+
+                s.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 
